@@ -1,5 +1,5 @@
-2018/08/23-13:15:37.724 11ec Recovering log #15
-2018/08/23-13:15:37.724 11ec Level-0 table #18: started
-2018/08/23-13:15:37.772 11ec Level-0 table #18: 237 bytes OK
-2018/08/23-13:15:37.857 11ec Delete type=0 #15
-2018/08/23-13:15:37.857 11ec Delete type=3 #13
+2018/08/23-16:29:18.670 34d4 Recovering log #22
+2018/08/23-16:29:18.670 34d4 Level-0 table #24: started
+2018/08/23-16:29:18.698 34d4 Level-0 table #24: 237 bytes OK
+2018/08/23-16:29:18.775 34d4 Delete type=0 #22
+2018/08/23-16:29:18.775 34d4 Delete type=3 #20
