@@ -43,11 +43,8 @@ server.get('/hotels/', function (req, res, next) {
     res.writeHead(200, {
         'Content-Type': 'application/json; charset=utf-8'
     });
-    db.allDocs({
-        include_docs: true,
-        attachments: true
-    }).then( docRes => {
-        let hotels = docRes.rows.map(row => {
+    db.allDocs({ include_docs: true }).then( docRes => {
+        let hotels = docRes.rows.filter(row=> row.doc && row.doc.language != "query").map(row => {
             let hotel = row.doc;
             hotel.id = row.id;
             delete hotel._id;
