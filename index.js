@@ -43,22 +43,48 @@ server.get('/hotels/', function (req, res, next) {
     res.writeHead(200, {
         'Content-Type': 'application/json; charset=utf-8'
     });
-    db.allDocs({ include_docs: true }).then( docRes => {
-        let hotels = docRes.rows.filter(row=> row.doc && row.doc.language != "query").map(row => {
-            let hotel = row.doc;
-            hotel.id = row.id;
-            delete hotel._id;
-            delete hotel._rev;
-            return hotel;
+    if(Object.keys(req.query).length){
+        let {name, stars} = req.query;
+        let selector = {};
+        if(name){
+            selector.name = {$regex: RegExp(`.*${name}.*`, "i")};
+        }
+        if(stars){
+            let inputStars = stars.replace(/,/g,'|')
+            if(inputStars){
+                selector.stars = { $regex: RegExp(`${inputStars}`)};
+            }
+        }
+        db.find({selector}).then( docRes => {
+            let hotels = docRes.docs.map(row => {
+                let hotel = row;
+                hotel.id = row.id;
+                delete hotel._id;
+                delete hotel._rev;
+                return hotel;
+            });
+            res.end(JSON.stringify(hotels));
+        }).catch( (err)=>{
+            res.end(JSON.stringify({err}));
         });
-        res.end(JSON.stringify(hotels));
-    }).catch( (err)=>{
-        res.end(JSON.stringify({err}));
-    });
+    }else{
+        db.allDocs({ include_docs: true }).then( docRes => {
+            let hotels = docRes.rows.filter(row=> row.doc && row.doc.language != "query").map(row => {
+                let hotel = row.doc;
+                hotel.id = row.id;
+                delete hotel._id;
+                delete hotel._rev;
+                return hotel;
+            });
+            res.end(JSON.stringify(hotels));
+        }).catch( (err)=>{
+            res.end(JSON.stringify({err}));
+        });
+    }
     return next();
 });
 
-server.get('/hotels/:hotelID', function (req, res, next) {
+server.get('/hotel/:hotelID', function (req, res, next) {
     let {hotelID} = req.params;
     res.writeHead(200, {
         'Content-Type': 'application/json; charset=utf-8'
@@ -75,7 +101,7 @@ server.get('/hotels/:hotelID', function (req, res, next) {
     return next();
 });
 
-server.get('/hotels/search/:hotelName', function (req, res, next) {
+server.get('/hotels?name=:hotelName', function (req, res, next) {
     let {hotelName} = req.params;
     res.writeHead(200, {
         'Content-Type': 'application/json; charset=utf-8'
