@@ -1,21 +1,11 @@
-let restify = require('restify');
-let initApi = require('./api');
+let initApi = require('./api.endpoints');
 let DatabaseServiceClass = require('./database.service');
+let ServerClass = require('./server');
 
-const server = restify.createServer({
-  name: 'almundo-be',
-  version: '1.0.0'
-});
-
-server.use(restify.plugins.acceptParser(server.acceptable));
-server.use(restify.plugins.queryParser());
-server.use(restify.plugins.bodyParser());
-
+let server = new ServerClass();
 let databaseService = new DatabaseServiceClass();
 
 databaseService.initialize().then( ()=>{
     initApi(server, databaseService);
-    server.listen(8080, function () {      
-        console.log('%s listening at %s', server.name, server.url);
-    });    
+    server.listen();
 });

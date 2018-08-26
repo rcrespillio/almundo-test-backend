@@ -20,7 +20,7 @@ module.exports = class DatabaseService {
                 delete td.id;
                 return td;
             })
-            this.db.bulkDocs(testData).then( ()=>{
+            return this.db.bulkDocs(testData).then( ()=>{
                 console.log('db mock data initialized');
             }).catch(() => {
                 console.log('error while initializing mock data');
@@ -28,8 +28,12 @@ module.exports = class DatabaseService {
         });
     }
 
+    putHotel(hotel){
+        return this.db.put(hotel);
+    }
+
     getAllHotels(){
-        return db.allDocs({ include_docs: true }).then( docRes => {
+        return this.db.allDocs({ include_docs: true }).then( docRes => {
             return docRes.rows.filter(row=> row.doc && row.doc.language != "query").map(row => {
                 let hotel = row.doc;
                 hotel.id = row.id;
