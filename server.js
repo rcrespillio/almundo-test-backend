@@ -10,6 +10,13 @@ module.exports = class Server {
         server.use(restify.plugins.queryParser());
         server.use(restify.plugins.bodyParser());
         this.server = server;
+        this.server.use(
+            function crossOrigin(req,res,next){
+              res.header("Access-Control-Allow-Origin", "*");
+              res.header("Access-Control-Allow-Headers", "X-Requested-With");
+              return next();
+            }
+          );
     }
 
     listen(){
