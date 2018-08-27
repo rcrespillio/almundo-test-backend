@@ -18,3 +18,6 @@ npm install
 Start the server: 
 
 npm start
+
+
+Note: make sure you have Visual C++ Build Tools in order to run npm install without errors
